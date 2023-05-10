@@ -1,0 +1,18 @@
+{
+  "name": "monitroing-hujan",
+  "version": "1.0.0",
+  "description": "insert data curah hujan ke database",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fikri",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^3.3.0",
+    "sequelize": "^6.31.1"
+  }
+}
