@@ -27,6 +27,10 @@ int detik;
 String timeFormat;
 String cuaca;
 
+
+int suhu = 26;
+int kelembapan = 74;
+
 long ltime = millis();
 
 float temp_curah_hujan_per_menit = 0.00;
@@ -131,8 +135,8 @@ void postdata(int curah_hujan, String cuaca, String datetime) {
   if (WiFi.status() == WL_CONNECTED) {
     WiFiClient client;
     HTTPClient http;
-    String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"createdAt\": \"" + datetime + "\"}";
-
+    // String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"createdAt\": \"" + datetime + "\"}";
+    String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"suhu\": " + String(suhu) + ", \"kelembapan\": " + String(kelembapan) + ", \"createdAt\": \"" + datetime + "\"}";
     http.begin(client, serverName);
     http.addHeader("Content-Type", "application/json");
     int httpResponseCode = http.POST(arduinoDataString);
