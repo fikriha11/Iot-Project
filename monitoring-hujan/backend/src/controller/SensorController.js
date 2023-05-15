@@ -24,8 +24,9 @@ export const getData = async (req, res) => {
 /*
   (Get Post) http://127.0.0.1:5001/sensor
   {
-    "curah_hujan": 100,
-    "cuaca": "badai",
-    "createdAt": "2023-05-07 00:50:00"
+    "curah_hujan" : 20,
+    "cuaca" : "hujan ringan",
+    "suhu" : 32,
+    "kelembapan" : 78
   }
 */
