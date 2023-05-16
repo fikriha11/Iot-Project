@@ -1,19 +1,25 @@
 #include <WiFi.h>
 #include <NTPClient.h>
 #include <HTTPClient.h>
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+#define OLED_ADDR   0x3C
+Adafruit_SSD1306 display(-1);
 
-//const char* ssid = "Workshop TRM";
-//const char* password = "1sampai8";
 
-const char* ssid = "Haikal";
-const char* password = "jember2022";
+const char* ssid = "ELIN";
+const char* password = "@polije.ac.id";
+const char* serverName = "http://10.132.108.50:5001/sensor";
+
+// const char* ssid = "Haikal";
+// const char* password = "jember2022";
+// const char* serverName = "http://192.168.1.106:5001/sensor";
 
 const long utcOffsetInSeconds = 25200;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "asia.pool.ntp.org", utcOffsetInSeconds);
 
-const char* serverName = "http://192.168.1.106:5001/sensor";
 
 
 const int pin_interrupt = 14;
@@ -24,6 +30,8 @@ float milimeter_per_tip = 0.30;
 volatile boolean flag = false;
 
 int detik;
+int menit;
+int jam;
 String timeFormat;
 String cuaca;
 
@@ -45,6 +53,7 @@ void ICACHE_RAM_ATTR hitung_curah_hujan()
 
 void setup() {
   Serial.begin(9600);
+  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
   delay(1000);
 
   pinMode(pin_interrupt, INPUT);
@@ -53,6 +62,14 @@ void setup() {
   WiFi.begin(ssid, password);
   Serial.println("\nConnecting");
 
+  /*** OLED ***/
+  display.clearDisplay();
+  display.setTextSize(1.7);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("Connecting Wifi....");
+  display.display();
+
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(100);
@@ -60,11 +77,65 @@ void setup() {
 
   timeClient.begin();
 
+  /*** OLED ***/
+  display.clearDisplay();
+  display.setTextSize(1.7);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  display.println("Connected");
+  display.println("");
+  display.println(WiFi.localIP());
+  display.display();
+  delay(1000);
+
+  /** Persipan **/
+  displayPersiapan();
+  updateTime();
+  displaySensor();
+  
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
   Serial.println(WiFi.localIP());
 }
 
+void displayPersiapan() {
+  display.clearDisplay();
+  display.setTextColor(WHITE);
+  display.setTextSize(1);
+  display.setCursor(30, 10);
+  display.println("RUNNING IN");
+  display.display();
+  display.clearDisplay();
+  delay(1000);
+  for (int i = 5 ; i > 0; i--) {
+    display.setTextColor(WHITE);
+    display.setTextSize(3);
+    display.setCursor(55, 5);
+    display.println(i);
+    display.display();
+    display.clearDisplay();
+    delay(1000);
+  }
+}
+
+void displaySensor() {
+  display.setTextColor(WHITE);
+  display.setTextSize(1.7);
+  display.setCursor(20, 0);
+  display.print("INTENSITAS HUJAN");
+
+  display.setCursor(40, 13);
+  display.print(int(curah_hujan_per_menit));
+  display.print(" ml/min");
+  
+  display.setCursor(0, 25);
+  display.print(jam);
+  display.print(":");
+  display.print(menit);
+
+  display.display();
+  display.clearDisplay();
+}
 
 void loop()
 {
@@ -105,6 +176,8 @@ void printSerial()
 void updateTime() {
   timeClient.update();
   detik = timeClient.getSeconds();
+  menit = timeClient.getMinutes();
+  jam = timeClient.getHours();
   timeFormat = timeClient.getFormattedDate();
   timeFormat = timeFormat.substring(0, 10) + " " + timeFormat.substring(11, 19);
   delay(500);
@@ -117,12 +190,13 @@ void updatePerMinute() {
     temp_curah_hujan_per_menit = curah_hujan;
     if (detik == 0) {
       curah_hujan_per_menit = temp_curah_hujan_per_menit;
+      displaySensor();
 
       // Reset
       temp_curah_hujan_per_menit = 0.00;
       curah_hujan = 0.00;
-      jumlah_tip = 0; 
-      
+      jumlah_tip = 0;
+
       checkCuaca(curah_hujan_per_menit);
       postdata(curah_hujan_per_menit, cuaca, timeFormat);
     }
