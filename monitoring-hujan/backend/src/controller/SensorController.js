@@ -7,7 +7,7 @@ export const createdataSensor = async (req, res) => {
     console.log(req.body);
     res.status(201).json({ msg: "Sensor Posted" });
   } catch (error) {
-    // console.log(error.message);
+    console.log(error.message);
   }
 };
 

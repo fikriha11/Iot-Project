@@ -7,13 +7,13 @@
 Adafruit_SSD1306 display(-1);
 
 
-const char* ssid = "ELIN";
-const char* password = "@polije.ac.id";
-const char* serverName = "http://10.132.108.50:5001/sensor";
+// const char* ssid = "ELIN";
+// const char* password = "@polije.ac.id";
+// const char* serverName = "http://10.132.108.50:5001/sensor";
 
-// const char* ssid = "Haikal";
-// const char* password = "jember2022";
-// const char* serverName = "http://192.168.1.106:5001/sensor";
+const char* ssid = "Haikal";
+const char* password = "jember2022";
+const char* serverName = "http://192.168.1.106:5001/sensor";
 
 const long utcOffsetInSeconds = 25200;
 
@@ -92,7 +92,7 @@ void setup() {
   displayPersiapan();
   updateTime();
   displaySensor();
-  
+
   Serial.println("\nConnected to the WiFi network");
   Serial.print("Local ESP32 IP: ");
   Serial.println(WiFi.localIP());
@@ -127,7 +127,7 @@ void displaySensor() {
   display.setCursor(40, 13);
   display.print(int(curah_hujan_per_menit));
   display.print(" ml/min");
-  
+
   display.setCursor(0, 25);
   display.print(jam);
   display.print(":");
@@ -209,8 +209,7 @@ void postdata(int curah_hujan, String cuaca, String datetime) {
   if (WiFi.status() == WL_CONNECTED) {
     WiFiClient client;
     HTTPClient http;
-    // String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"createdAt\": \"" + datetime + "\"}";
-    String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"suhu\": " + String(suhu) + ", \"kelembapan\": " + String(kelembapan) + ", \"createdAt\": \"" + datetime + "\"}";
+    String arduinoDataString = "{\"curah_hujan\": " + String(curah_hujan) + ", \"cuaca\": \"" + cuaca + "\", \"suhu\": " + String(suhu) + ", \"kelembapan\": " + String(kelembapan) + "}";
     http.begin(client, serverName);
     http.addHeader("Content-Type", "application/json");
     int httpResponseCode = http.POST(arduinoDataString);
