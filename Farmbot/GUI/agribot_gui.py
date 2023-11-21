@@ -4,6 +4,7 @@ import tkinter.font
 from wsgiref import headers
 import requests
 import cv2
+import os
 import urllib.request
 from datetime import datetime
 from serial import Serial
@@ -23,11 +24,12 @@ Farmbot = '1'
 serialPort = "/dev/ttyACM0"
 # serialPort = "/dev/ttyUSB0"
 
-# path = '/home/pi/Documents/Farmbot/'
-path = ''
-
+path = os.path.dirname(os.path.abspath(__file__))
 baudRate = 9600
+print(path)
 
+# path = '/home/pi/Documents/Farmbot/'
+# path = ''
 
 try:  
   ser = Serial(serialPort, baudRate, timeout=0, writeTimeout=0)
@@ -73,10 +75,10 @@ frame1.grid(row=0, column=0, sticky='nsew')
 frame2.grid(row=0, column=0, sticky='nsew')
 
 # ========================FRAME 1================================
-bckg = PhotoImage(file=path + "GUI/window 1/background2.png")
+bckg = PhotoImage(file=path + "/window 1/background2.png")
 lbl_bg = Label(frame1, image=bckg).pack()
 
-btnext = PhotoImage(file=path + "GUI/window 1/next.png")
+btnext = PhotoImage(file=path + "/window 1/next.png")
 lbl_btnext = Button(frame1, image=btnext, background='#FFFFFF',
                     command=lambda:[showframe(frame2), UpdateTanaman()])
 lbl_btnext.place(x=757, y=197)
@@ -94,23 +96,23 @@ l_internet_status = Label(frame1, text='', textvariable=internet_status,
                            font=textfont, bg='#C6E9FC').place(x=550, y=386)
 
 # dynamic image untuk dirubah dari data serial
-img = PhotoImage(file=path + "GUI/emoji/1.png")
+img = PhotoImage(file=path + "/emoji/1.png")
 lbl_img = ttk.Label(frame1, image=img, background='#FFFFFF')
 lbl_img.place(x=35, y=115)
 
 
 # ========================FRAME 2================================
-bckg2 = PhotoImage(file=path + "GUI/window 2/bg.png")
+bckg2 = PhotoImage(file=path + "/window 2/bg.png")
 lbl_bg2 = Label(frame2, image=bckg2).pack()
 
-btnext2 = PhotoImage(file=path + "GUI/window 2/back.png")
+btnext2 = PhotoImage(file=path + "/window 2/back.png")
 lbl_btnext2 = Button(frame2, image=btnext2,
                      background='#FFFFFF', command=lambda: showframe(frame1))
 lbl_btnext2.place(x=43, y=20)
 
 # # source image untuk pot
-planted = PhotoImage(file=path + "GUI/window 2/planted.png")
-unplanted = PhotoImage(file=path + "GUI/window 2/empty.png")
+planted = PhotoImage(file=path + "/window 2/planted.png")
+unplanted = PhotoImage(file=path + "/window 2/empty.png")
 
 # static image. pot baris 1 (p11-p16)
 p11 = Label(frame2, image=unplanted, background='#FFFFFF')
@@ -259,7 +261,7 @@ def readSerial():
 
 
             # ubah dynamic image
-            img = PhotoImage(file=path + "GUI/emoji/" + p_status + ".png")
+            img = PhotoImage(file=path + "/emoji/" + p_status + ".png")
 
             lbl_img.configure(image=img)
             lbl_img.image = img

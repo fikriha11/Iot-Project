@@ -42,9 +42,9 @@ def TextToSpeech(cTemp, lux, humidity, moisture, path):
         language = 'id'
     
         output = gTTS(text=phrase + phrase1, lang=language, slow=False)
-        output.save(path + "GUI/temp.mp3")
+        output.save(path + "/temp.mp3")
         time.sleep(0.4)
-        os.system("mpg123 {}GUI/temp.mp3".format(path))
+        os.system("mpg123 {}/temp.mp3".format(path))
         return True
     except:
         print("SoundOutput Error")
